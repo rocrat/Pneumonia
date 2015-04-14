@@ -1,0 +1,34 @@
+\documentclass{article}
+
+\begin{document}
+
+<<ReadinClean,echo=FALSE>>=
+rm(ls=list())
+library(xlsx)
+library(BDSS)
+library(car)
+dat<-read.xlsx("C:/Projects/Pneumonia/DATA FOR ANALYSIS.xlsx",sheetName="DATA",startRow=2,header=F)
+names(dat)<-c("s.no","roll.num","Mortality","rvp","other.infect","age","age60","sex","BMI30","BMI","prev.stay","immun.comp","lung.dis","diab","curb","curb35","psiAdmit","psiAdmit4","vpdose","aki","pl.eff","dysp","wheeze","admit","hct30","hct","pna","mech.vent","ecmo")
+#curb score has only 5 levels (0-4) so may best be used as a category
+dat$curb35<-Recode(dat$curb35,"'N'='NO'")
+dat$curbf<-as.factor(dat$curb)
+
+#need to create binary other infect variable and immumo-comprimised variable
+dat$other.infect.stat<-ifelse(dat$other.infect=="NO","NO","YES")
+dat$immun.comp.stat<-ifelse(dat$immun.comp=="NO","NO","YES")
+#need to separate out PSI and PSI class
+sep<-do.call(rbind,strsplit(as.character(dat$psiAdmit),split="\\("))
+dat$psi<-as.numeric(as.character(sep[,1]))
+dat$psiClass<-substr(sep[,2],1,1)
+#need to separate lung disease status from cause
+dat$lung.dis.stat<-grepl("YES",dat$lung.dis)
+
+@
+
+
+<<SummTable,echo=FALSE,results='asis'>>=
+SummaryTable(data=dat,colvar="Mortality",rowvars=c("rvp","other.infect.stat","age60","sex","BMI30","prev.stay","immun.comp.stat","lung.dis.stat","diab","curbf","curb35","psiClass","vpdose","aki","pl.eff","dysp","wheeze","admit","hct30","pna","mech.vent","ecmo"), cont.vars=c("age","BMI","psi","hct"), row.names=c("Resp.Panel","Other Infect.","Age>60","Sex","BMI>30","Previous Loc.","Immuno-comp","Pulm. Dis.","Diabetes","Curb Score","Curb>=3/5","PSI Class","Vaspprssor","AKI","PL.Effusion","Dyspnea","Wheezing","Admitted from","HCT<30","PNA","Mech. Vent.","ECMO"),output="rtf",outfile="c:\\Projects\\Pneumonia\\table1.rtf")
+@
+
+
+\end{document}
