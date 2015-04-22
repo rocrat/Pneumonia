@@ -1,5 +1,5 @@
 #Make importance plot from pilot coefs trained on Lasso and Grouped Lasso
-cfs<-read.csv("C:/Projects/Pneumonia/Pilot_coefs.csv")
+cfs<-read.csv("C:/Projects/Pneumonia/Pilot_coefs_w_names.csv")
 #convert to long form
 lasso<-cfs[,1:2]
 names(lasso)[2]<-"Coefficient"

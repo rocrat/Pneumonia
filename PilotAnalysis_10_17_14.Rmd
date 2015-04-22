@@ -5,6 +5,9 @@ date: "Friday, October 17, 2014"
 output: word_document
 ---
 
+<<Checkpoint>>=
+
+@
 
 
 ```{r readinClean,echo=FALSE,message=FALSE}
@@ -121,7 +124,7 @@ plot(m3cv)
 gLowestMSE<-m3cv$gglasso.fit$beta[,which(m3cv$lambda==m3cv$lambda.min)]
 combMat<-matrix(c(LowestMSE,gLowestMSE),37,2)
 colnames(combMat)<-c("LASSO Coef","Grouped Coef")
-rownames(combMat)<-rep("A",40)#dimnames(m3cv$gglasso.fit$beta)[[1]]
+rownames(combMat)<-names(LowestMSE)
 write.csv(combMat,"C:/Projects/Pneumonia/Pilot_coefs.csv")
 ```
 
